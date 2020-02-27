@@ -54,7 +54,16 @@ jobs:
           ./scripts/feeds install -a
 
       - name: Generate configuration file
-        run: make defconfig
+         run: | 
+          rm -f ./.config*
+          rm -rf ./tmp
+          touch ./.config
+          cat >> .config <<EOF
+          CONFIG_TARGET_ipq806x=y
+          CONFIG_TARGET_ipq806x_DEVICE_netgear_r7800=y
+          EOF
+          sed -i 's/^[ \t]*//g' ./.config
+          make defconfig
 
       - name: Make download
         run: |
